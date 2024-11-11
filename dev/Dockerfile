@@ -12,4 +12,4 @@ RUN dnf install -y https://github.com/getsops/sops/releases/download/v3.7.3/sops
 
 # Lazygit
 RUN dnf copr enable atim/lazygit -y
-RUN dnf install lazygit
+RUN dnf install -y lazygit
