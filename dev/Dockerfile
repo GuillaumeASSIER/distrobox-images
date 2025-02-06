@@ -1,4 +1,4 @@
-FROM registry.fedoraproject.org/fedora-toolbox:41
+FROM registry.fedoraproject.org/fedora-toolbox:43
 
 # Upgrading image
 RUN dnf update
