@@ -4,20 +4,17 @@ FROM registry.fedoraproject.org/fedora-toolbox:44
 LABEL org.opencontainers.image.authors="GuillaumeASSIER"
 LABEL org.opencontainers.image.source="https://github.com/GuillaumeASSIER/distrobox-images"
 
-# Make versions easy to bump
-ARG SOPS_VERSION=3.11.0
-ENV BUN_INSTALL=/root/.bun
-ENV PATH=${BUN_INSTALL}/bin:${PATH}
+ENV PATH=/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:${PATH}
 
 # Install tooling in one layer to reduce image size and number of layers.
-RUN set -eux; \
+ADD --chmod=+x https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh /tmp/install-homebrew.sh
+
+RUN set -eux && \
     dnf -y --setopt=install_weak_deps=False --setopt=tsflags=nodocs install \
-        git python3-firewall pipx just hugo opentofu go-task age uv docker-cli dnf-plugins-core; \
-    dnf -y copr enable atim/lazygit -y; \
-    dnf -y install lazygit; \
-    curl -fsSL -o /tmp/sops.rpm "https://github.com/getsops/sops/releases/download/v${SOPS_VERSION}/sops-${SOPS_VERSION}-1.x86_64.rpm"; \
-    dnf -y install /tmp/sops.rpm; rm -f /tmp/sops.rpm; \
-    curl -fsSL https://bun.com/install | bash; \
-    if [ -x "${BUN_INSTALL}/bin/bun" ]; then "${BUN_INSTALL}/bin/bun" add -g opencode-ai || true; fi; \
-    curl -fsSL https://deno.land/install.sh | sh; \
-    dnf clean all; rm -rf /var/cache/dnf /tmp/*
+        git tmux python3-firewall pipx go-task uv docker-cli dnf-plugins-core curl file procps-ng gcc make && \
+    NONINTERACTIVE=1 CI=1 /bin/bash /tmp/install-homebrew.sh && \
+    echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' > /etc/profile.d/homebrew.sh && \
+    . /etc/profile.d/homebrew.sh && \
+    brew update && \
+    brew install sops deno bun lazygit age opentofu just hugo opencode block-goose || true && \
+    dnf clean all && rm -rf /var/cache/dnf /tmp/*
