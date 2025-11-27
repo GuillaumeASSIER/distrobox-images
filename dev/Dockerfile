@@ -42,3 +42,5 @@ RUN su - linuxbrew -c "/home/linuxbrew/.linuxbrew/bin/brew update" && \
     su - linuxbrew -c "/home/linuxbrew/.linuxbrew/bin/brew install ${BREW_DEV_PACKAGES} || true" && \
     su - linuxbrew -c "/home/linuxbrew/.linuxbrew/bin/brew install ${BREW_OPS_PACKAGES} || true" && \
     su - linuxbrew -c "/home/linuxbrew/.linuxbrew/bin/brew install ${BREW_AI_PACKAGES} || true"
+
+RUN curl -f https://zed.dev/install.sh | ZED_CHANNEL=preview sh

@@ -6,6 +6,6 @@ Welcome to my distrobox custom images repository.
 
 The dev image is build on fedora-toolbox top with my daily tooling
 
-´´´bash
+```bash
 distrobox assemble create --file dev/dev.ini
-´´´
+```
