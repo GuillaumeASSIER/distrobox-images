@@ -51,3 +51,5 @@ RUN curl -f https://zed.dev/install.sh | ZED_CHANNEL=preview sh && \
 #     More tools section     #
 #######################
 RUN uv tool install specify-cli --from git+https://github.com/github/spec-kit.git
+RUN uv tool install ruff 
+RUN uv tool install  mypy
