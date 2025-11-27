@@ -7,7 +7,7 @@ LABEL org.opencontainers.image.source="https://github.com/GuillaumeASSIER/distro
 ENV PATH=/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:${PATH}
 
 # Package lists
-ENV DNF_PACKAGES="git tmux python3-firewall pipx go-task uv docker-cli dnf-plugins-core curl file procps-ng gcc make"
+ENV DNF_PACKAGES="git tmux python3-firewall pipx go-task uv docker-cli docker-compose dnf-plugins-core curl file procps-ng gcc make"
 ENV DNF_PLAYWRIGHT_PACKAGES="chromium-headless at-spi2-atk"
 ENV BREW_DEV_PACKAGES="development-tools gcc deno bun lazygit just hugo"
 ENV BREW_OPS_PACKAGES="age sops opentofu terraform"
@@ -43,4 +43,11 @@ RUN su - linuxbrew -c "/home/linuxbrew/.linuxbrew/bin/brew update" && \
     su - linuxbrew -c "/home/linuxbrew/.linuxbrew/bin/brew install ${BREW_OPS_PACKAGES} || true" && \
     su - linuxbrew -c "/home/linuxbrew/.linuxbrew/bin/brew install ${BREW_AI_PACKAGES} || true"
 
-RUN curl -f https://zed.dev/install.sh | ZED_CHANNEL=preview sh
+RUN curl -f https://zed.dev/install.sh | ZED_CHANNEL=preview sh && \
+        curl -LsSf https://astral.sh/uv/install.sh | sh
+
+ 
+#######################
+#     More tools section     #
+#######################
+RUN uv tool install specify-cli --from git+https://github.com/github/spec-kit.git
