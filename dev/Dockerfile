@@ -10,7 +10,7 @@ ENV PATH=/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:${PATH}
 ENV DNF_PACKAGES="git tmux python3-firewall pipx go-task uv docker-cli docker-compose dnf-plugins-core curl file procps-ng gcc make"
 ENV DNF_PLAYWRIGHT_PACKAGES="chromium-headless at-spi2-atk"
 ENV BREW_DEV_PACKAGES="development-tools gcc deno bun lazygit just hugo"
-ENV BREW_OPS_PACKAGES="age sops opentofu terraform siderolabs/tap/talosctl"
+ENV BREW_OPS_PACKAGES="age sops opentofu terraform siderolabs/tap/talosctl derailed/k9s/k9s kustomize helm"
 ENV BREW_AI_PACKAGES="opencode block-goose-cli"
 
 # Base install
