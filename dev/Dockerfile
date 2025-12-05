@@ -6,6 +6,9 @@ LABEL org.opencontainers.image.source="https://github.com/GuillaumeASSIER/distro
 
 ENV PATH=/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:${PATH}
 
+# Copy custom bashrc from filesystem
+COPY filesystem/etc/skel/.bashrc /etc/skel/.bashrc
+
 # Package lists
 ENV DNF_PACKAGES="git tmux python3-firewall pipx go-task uv docker-cli docker-compose dnf-plugins-core curl file procps-ng gcc make"
 ENV DNF_PLAYWRIGHT_PACKAGES="chromium-headless at-spi2-atk"
