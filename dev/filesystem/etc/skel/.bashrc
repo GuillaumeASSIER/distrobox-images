@@ -106,3 +106,5 @@ fi
 if [ -f ~/.homebrewrc ]; then
     . ~/.homebrewrc
 fi
+
+export PATH="$HOME/go/bin:$PATH"

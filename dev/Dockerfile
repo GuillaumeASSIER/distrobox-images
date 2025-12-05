@@ -10,7 +10,7 @@ ENV PATH=/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:${PATH}
 COPY filesystem/etc/skel/.bashrc /etc/skel/.bashrc
 
 # Package lists
-ENV DNF_PACKAGES="git tmux python3-firewall pipx go-task uv docker-cli docker-compose dnf-plugins-core curl file procps-ng gcc make"
+ENV DNF_PACKAGES="git tmux python3-firewall pipx go-task uv docker-cli docker-compose dnf-plugins-core curl file procps-ng gcc make golang jq wget unzip curl"
 ENV DNF_PLAYWRIGHT_PACKAGES="chromium-headless at-spi2-atk"
 ENV BREW_DEV_PACKAGES="development-tools gcc deno bun lazygit just hugo"
 ENV BREW_OPS_PACKAGES="age sops opentofu terraform siderolabs/tap/talosctl derailed/k9s/k9s kustomize helm"
@@ -53,6 +53,14 @@ RUN curl -f https://zed.dev/install.sh | ZED_CHANNEL=preview sh && \
 #######################
 #     More tools section     #
 #######################
-RUN uv tool install specify-cli --from git+https://github.com/github/spec-kit.git
-RUN uv tool install ruff 
-RUN uv tool install  mypy
+RUN uv tool install specify-cli --from git+https://github.com/github/spec-kit.git &&\
+        uv tool install ruff &&\
+        uv tool install  mypy
+
+#############################
+#     Install nuclei templates     #
+#############################
+RUN go install -v github.com/projectdiscovery/subfinder/cmd/subfinder@latest && \
+        go install -v github.com/projectdiscovery/httpx/cmd/httpx@latest && \
+        go install -v github.com/projectdiscovery/nuclei/v2/cmd/nuclei@latest   && \
+        nuclei -update-templates
