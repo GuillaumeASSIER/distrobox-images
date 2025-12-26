@@ -29,9 +29,8 @@ RUN useradd -m -s /bin/bash linuxbrew
 # Cache the Homebrew install script
 ADD --chmod=+x --chown=linuxbrew:linuxbrew  https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh /tmp/install-homebrew.sh
 
-#######################
-#      Homebrew section      #
-#######################
+# Homebrew section
+##############################################
 
 # Run the installer as the non-root `linuxbrew` user. Create the system-wide
 # profile file as root afterwards so other shells can pick up Homebrew.
@@ -49,18 +48,17 @@ RUN su - linuxbrew -c "/home/linuxbrew/.linuxbrew/bin/brew update" && \
 RUN curl -f https://zed.dev/install.sh | ZED_CHANNEL=preview sh && \
         curl -LsSf https://astral.sh/uv/install.sh | sh
 
- 
-#######################
-#     More tools section     #
-#######################
+# More tools section
+##############################################
 RUN uv tool install specify-cli --from git+https://github.com/github/spec-kit.git &&\
         uv tool install ruff &&\
         uv tool install  mypy
 
-#############################
-#     Install nuclei templates     #
-#############################
-RUN go install -v github.com/projectdiscovery/subfinder/cmd/subfinder@latest && \
-        go install -v github.com/projectdiscovery/httpx/cmd/httpx@latest && \
-        go install -v github.com/projectdiscovery/nuclei/v2/cmd/nuclei@latest   && \
-        nuclei -update-templates
+# Install Go-based security tools
+##############################################
+# Note: subfinder v2.8.0 is marked as incompatible; use the main branch instead
+# httpx and nuclei work fine with @latest
+RUN go install -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder@latest && \
+    go install -v github.com/projectdiscovery/httpx/cmd/httpx@latest && \
+    go install -v github.com/projectdiscovery/nuclei/v2/cmd/nuclei@latest && \
+    nuclei -update-templates
