@@ -15,6 +15,7 @@ ENV DNF_PLAYWRIGHT_PACKAGES="chromium-headless at-spi2-atk"
 ENV BREW_DEV_PACKAGES="development-tools gcc deno bun lazygit just hugo"
 ENV BREW_OPS_PACKAGES="age sops opentofu terraform siderolabs/tap/talosctl derailed/k9s/k9s kustomize helm kubectl"
 ENV BREW_AI_PACKAGES="opencode block-goose-cli"
+ENV BREW_SEC_PACKAGES="httpx nuclei subfinder"
 
 # Base install
 RUN dnf install -y ${DNF_PACKAGES} && \
@@ -43,7 +44,8 @@ RUN chown linuxbrew:linuxbrew /tmp/install-homebrew.sh && \
 RUN su - linuxbrew -c "/home/linuxbrew/.linuxbrew/bin/brew update" && \
     su - linuxbrew -c "/home/linuxbrew/.linuxbrew/bin/brew install ${BREW_DEV_PACKAGES} || true" && \
     su - linuxbrew -c "/home/linuxbrew/.linuxbrew/bin/brew install ${BREW_OPS_PACKAGES} || true" && \
-    su - linuxbrew -c "/home/linuxbrew/.linuxbrew/bin/brew install ${BREW_AI_PACKAGES} || true"
+    su - linuxbrew -c "/home/linuxbrew/.linuxbrew/bin/brew install ${BREW_AI_PACKAGES} || true" && \
+    su - linuxbrew -c "/home/linuxbrew/.linuxbrew/bin/brew install ${BREW_SEC_PACKAGES} || true"
 
 RUN curl -f https://zed.dev/install.sh | ZED_CHANNEL=preview sh && \
         curl -LsSf https://astral.sh/uv/install.sh | sh
@@ -52,10 +54,4 @@ RUN curl -f https://zed.dev/install.sh | ZED_CHANNEL=preview sh && \
 ##############################################
 RUN uv tool install specify-cli --from git+https://github.com/github/spec-kit.git &&\
         uv tool install ruff &&\
-        uv tool install  mypy
-
-# Install Go-based security tools
-##############################################
-RUN go install -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder@latest && \
-    go install -v github.com/projectdiscovery/httpx/cmd/httpx@latest && \
-    go install -v github.com/projectdiscovery/nuclei/v2/cmd/nuclei@latest
+        uv tool install  ty
