@@ -32,6 +32,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6
 
+      # Set lowercase image name
+      - name: Set lowercase image name
+        id: lowercase
+        run: echo "image_name=$(echo ${{ env.IMAGE_NAME }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_OUTPUT
+
       # Install the cosign tool except on PR
       # https://github.com/sigstore/cosign-installer
       - name: Install Cosign
@@ -61,7 +66,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@c299e40c65443455700f0fdfc63efafe5b349051 # v5.10.0
         with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          images: ${{ env.REGISTRY }}/${{ steps.lowercase.outputs.image_name }}
           tags: |
             type=ref,event=branch
             type=semver,pattern={{version}}
@@ -81,7 +86,7 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: |
             type=gha
-            type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:buildcache
+            type=registry,ref=${{ env.REGISTRY }}/${{ steps.lowercase.outputs.image_name }}:buildcache
           cache-to: type=gha,mode=max
           build-args: |
             BUILDKIT_INLINE_CACHE=1
