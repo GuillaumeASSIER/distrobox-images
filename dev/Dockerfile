@@ -16,7 +16,7 @@ COPY filesystem/etc/skel/.bashrc /etc/skel/.bashrc
 ENV DNF_PACKAGES="git tmux python3-firewall pipx go-task uv docker-cli docker-compose dnf-plugins-core curl file procps-ng gcc make golang jq wget unzip curl"
 ENV DNF_PLAYWRIGHT_PACKAGES="chromium-headless at-spi2-atk"
 ENV BREW_DEV_PACKAGES="development-tools gcc deno bun lazygit just hugo"
-ENV BREW_OPS_PACKAGES="age sops opentofu terraform siderolabs/tap/talosctl derailed/k9s/k9s Handfish/tap/talos-pilot kustomize helm kubectl cilium-cli"
+ENV BREW_OPS_PACKAGES="age sops opentofu terraform terragrunt siderolabs/tap/talosctl derailed/k9s/k9s Handfish/tap/talos-pilot kustomize helm kubectl cilium-cli"
 ENV BREW_AI_PACKAGES="opencode block-goose-cli"
 ENV BREW_SEC_PACKAGES="httpx nuclei subfinder"
 
@@ -60,4 +60,4 @@ RUN curl -f https://zed.dev/install.sh | ZED_CHANNEL=preview sh && \
 ##############################################
 RUN uv tool install specify-cli --from git+https://github.com/github/spec-kit.git &&\
         uv tool install ruff &&\
-        uv tool install  ty
+        uv tool install ty
