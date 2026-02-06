@@ -1,4 +1,4 @@
-FROM registry.fedoraproject.org/fedora-toolbox:44
+FROM registry.fedoraproject.org/fedora-toolbox:45
 
 # Metadata
 LABEL org.opencontainers.image.authors="GuillaumeASSIER"
