@@ -17,7 +17,7 @@ ENV DNF_PACKAGES="git tmux python3-firewall pipx go-task uv docker-cli docker-co
 ENV DNF_PLAYWRIGHT_PACKAGES="chromium-headless at-spi2-atk"
 ENV BREW_DEV_PACKAGES="development-tools gcc deno bun lazygit just hugo"
 ENV BREW_OPS_PACKAGES="age sops opentofu terragrunt siderolabs/tap/talosctl derailed/k9s/k9s Handfish/tap/talos-pilot kustomize helm kubectl cilium-cli"
-ENV BREW_AI_PACKAGES="opencode rtk-ai "
+ENV BREW_AI_PACKAGES="opencode rtk"
 ENV BREW_SEC_PACKAGES="httpx nuclei subfinder"
 
 # Base install
