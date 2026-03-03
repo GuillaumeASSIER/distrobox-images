@@ -30,10 +30,11 @@ RUN --mount=type=cache,target=/var/cache/dnf \
     dnf install -y ${DNF_PLAYWRIGHT_PACKAGES} && \
     dnf clean all && rm -rf /tmp/*
 
+# Create linuxbrew user for Homebrew installation (will be replaced by distrobox user at runtime)
 RUN useradd -m -u 1000 -s /bin/bash linuxbrew
 
 # Cache the Homebrew install script
-ADD --chmod=+x --chown=linuxbrew:linuxbrew  https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh /tmp/install-homebrew.sh
+ADD --chmod=+x https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh /tmp/install-homebrew.sh
 
 # Homebrew section
 ##############################################
@@ -42,10 +43,9 @@ ADD --chmod=+x --chown=linuxbrew:linuxbrew  https://raw.githubusercontent.com/Ho
 # profile file as root afterwards so other shells can pick up Homebrew.
 RUN chown linuxbrew:linuxbrew /tmp/install-homebrew.sh && \
     su - linuxbrew -c "NONINTERACTIVE=1 CI=1 /bin/bash /tmp/install-homebrew.sh" && \
-    echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' > /etc/profile.d/homebrew.sh && \
-    chmod 644 /etc/profile.d/homebrew.sh
+    echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' > /etc/profile.d/homebrew.sh
 
-# Brew packages installation (run as linuxbrew)
+# Brew packages installation (run as linuxbrew user during build)
 RUN --mount=type=cache,target=/home/linuxbrew/.cache,uid=1000,gid=1000 \
     su - linuxbrew -c "/home/linuxbrew/.linuxbrew/bin/brew update" && \
     su - linuxbrew -c "/home/linuxbrew/.linuxbrew/bin/brew install ${BREW_DEV_PACKAGES} || true" && \
