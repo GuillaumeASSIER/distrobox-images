@@ -12,13 +12,20 @@ RUN mkdir -p /etc/nix && \
     echo "experimental-features = nix-command flakes" > /etc/nix/nix.conf && \
     echo "sandbox = false" >> /etc/nix/nix.conf
 
+# Set PATH early so nix-env installs in the system profile take effect
+# during the build and at runtime.
+ENV PATH=/nix/var/nix/profiles/default/bin:${PATH}
+
 # Copy custom bashrc from filesystem
 COPY filesystem/etc/skel/.bashrc /etc/skel/.bashrc
 
-# Install nix packages using nix-env with explicit channel
+# Install nix packages using nix-env with explicit channel.
+# Packages are installed into the *system* profile (/nix/var/nix/profiles/default)
+# so they are visible to the non-root user at runtime — the default distrobox
+# user profile (~/.nix-profile) lives in /root and is unreachable for that user.
 RUN nix-channel --add https://nixos.org/channels/nixpkgs-unstable nixpkgs && \
     nix-channel --update && \
-    NIXPKGS_ALLOW_BROKEN=1 nix-env -i \
+    NIXPKGS_ALLOW_BROKEN=1 nix-env --profile /nix/var/nix/profiles/default -i \
     git \
     tmux \
     python3 \
@@ -58,11 +65,12 @@ RUN nix-channel --add https://nixos.org/channels/nixpkgs-unstable nixpkgs && \
     talosctl \
     ruff
 
-# Install opencode, rtk, httpx, nuclei, subfinder from binary caches
-RUN nix-env -i opencode httpx nuclei subfinder || true
+# Install opencode, httpx, nuclei, subfinder from binary caches.
+# nix-env is atomic: if any package fails, none get installed, so log a
+# warning instead of failing the build silently.
+RUN nix-env --profile /nix/var/nix/profiles/default -i opencode httpx nuclei subfinder \
+    || echo "WARNING: one of opencode/httpx/nuclei/subfinder failed to install (non-fatal)"
 
-# Install skills.sh via nix-installed bun
-RUN /nix/var/nix/profiles/default/bin/bunx skills.sh init --skip-confirm || true
-
-# Set PATH
-ENV PATH=/nix/var/nix/profiles/default/bin:/root/.nix-profile/bin:${PATH}
+# Install skills.sh via bun (installed in the system profile above)
+RUN bunx skills.sh init --skip-confirm \
+    || echo "WARNING: skills.sh init failed (non-fatal)"
