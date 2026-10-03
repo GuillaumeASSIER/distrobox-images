@@ -1,6 +1,6 @@
 # Bump this tag when a new Fedora toolbox release is available
 # (see https://registry.fedoraproject.org/v2/fedora-toolbox/tags/list)
-ARG FEDORA_TOOLBOX_TAG=44
+ARG FEDORA_TOOLBOX_TAG=46
 FROM registry.fedoraproject.org/fedora-toolbox:${FEDORA_TOOLBOX_TAG}
 
 # Metadata
